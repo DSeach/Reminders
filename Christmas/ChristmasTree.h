@@ -2,5 +2,9 @@
 #define CHRISTMASTREE_H
 
 void PrintChristmas(int width);
-void printMessage();
+
+void PrintMessage();
+
+void PrintChar(int width , char item);
+
 #endif

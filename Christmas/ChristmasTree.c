@@ -2,24 +2,31 @@
 #include "ChristmasTree.h"
 
 //TODO 
-// * Add days until ( finish printMessage )
-// * replace hardcoded width
-// * Replace hardcoded top and bottom lines in main
+// * Add days until ( finish printMessage ) --Moved to Dates program/folder
+// * replace hardcoded width --DONE--
+// * Replace hardcoded top and bottom lines in main --DONE--
 // * Odd?
+
 int main(int argc , char* argv[]){
+
+	const int treeWidth = 16;
+
 	printf(" ");
-	for(int width = 0; width < 16 + 4; ++width){printf("_");}
+	PrintChar(treeWidth + 4, '_');
 	printf(" \n| ");
-	for(int width = 0; width < 16 / 2; ++width){printf(" ");} printf("/\\");
-	for(int width = 0; width < 16 / 2; ++width){printf(" ");} printf(" |\n");
+
+	PrintChar(treeWidth / 2, ' '); printf("/\\");
+	PrintChar(treeWidth / 2, ' '); printf(" |\n");
+
 	for(int i = 0 ; i < 3; ++i){
-		PrintChristmas(16);
+		PrintChristmas(treeWidth);
 	}
+
 	printf("|");
-	for(int width = 0; width < 16 + 4; ++width){printf("_");}
+	PrintChar(treeWidth + 4, '_');
 	printf("|\n");
 
-	printMessage();
+	PrintMessage();
 	return 0;
 }
 
@@ -44,6 +51,11 @@ void PrintChristmas(int width){
 	}
 }
 //to print how many days until christmas, than say "Merry Christmas!" 
-void printMessage(){
+void PrintMessage(){
 	printf("Merry Christmas!!\n");
+}
+
+//To control the printing of x amount of character y
+void PrintChar(int width , char item){
+	for(int i = 0; i < width; ++i){printf("%c" , item);}
 }
