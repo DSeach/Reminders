@@ -56,8 +56,8 @@ void FillRecords(struct timeRecord* records , FILE* fd){
 	size_t len = 0;
 
 	while((nread = getline(&line , &len , fd)) != -1){
-	//	printf("Reading ... %s \n" , line);
-		fwrite(line,nread,1,stdout);
+		printf("Reading ... %s \n" , line);
+		//fwrite(line,nread,1,stdout);
 	}
 	free(line);
 }
