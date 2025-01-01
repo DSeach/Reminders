@@ -9,6 +9,6 @@ struct timeRecord {
 	char* tr_rep;
 };
 
-void FillRecords(struct timeRecord* records , FILE* fd);
+void FillRecords(struct timeRecord** records , FILE* fd);
 
 #endif

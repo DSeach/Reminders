@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 #include "ReminderSystem.h"
 
 	/**
@@ -20,11 +21,12 @@
 	*
 	* file name for data: dates
 	*
+	* TODO malloc timeRecord and in inner tm's
 	**/
 
 int main(int argc , char* argv[]){
 	time_t myTime = time(NULL);
-	struct timeRecord records[10];
+	struct timeRecord* records[10] = {0};
 	const char* fileName = "dates";
 	struct tm* currentTime = localtime(&myTime);
 	
@@ -50,14 +52,42 @@ int main(int argc , char* argv[]){
 	return 0;
 }
 
-void FillRecords(struct timeRecord* records , FILE* fd){
+void FillRecords(struct timeRecord** records , FILE* fd){
 	char* line = NULL;
+	char* tok = NULL;
+	char delim[2] = ",";
 	ssize_t nread;
 	size_t len = 0;
+	int recordNum = 0;
+	int num;
 
 	while((nread = getline(&line , &len , fd)) != -1){
-		printf("Reading ... %s \n" , line);
-		//fwrite(line,nread,1,stdout);
+		//printf("Reading ... %s \n" , line);
+		tok = strtok(line,delim);
+		//day,month,name,rep
+		for(int i = 0; i < 4 , tok != NULL; ++i) {
+
+			switch(i) {
+			case 0:
+			  num = atoi(tok);
+			  records[recordNum]->tr_tm->tm_mday = num; //day
+			  break;
+			case 1:
+			  num = atoi(tok);
+			  records[recordNum]->tr_tm->tm_mon = num; //month
+			  break;
+			case 2:
+			  records[recordNum]->tr_name = tok; //name of date
+			  break;
+			case 3:
+			  records[recordNum]->tr_rep = tok; //if repeating
+			  break;
+			}
+			tok = strtok(NULL , delim);
+
+		}
+		recordNum++;
+
 	}
 	free(line);
 }
