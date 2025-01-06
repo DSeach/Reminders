@@ -33,9 +33,8 @@ int main(int argc , char* argv[]){
 	struct tm christmas = {0};
 	christmas.tm_mday = 25;
 	christmas.tm_mon = 11;
-	christmas.tm_year = (currentTime->tm_year + 1);
+	christmas.tm_year = (currentTime->tm_year);
 	time_t chrissyTime = mktime(&christmas);
-
 	if(myTime > chrissyTime){printf("Christmas has already happend!\n");}
 	else{printf("Christmas is %d days away!\n" , (chrissyTime - myTime) / 60 / 60 / 24);}
 
