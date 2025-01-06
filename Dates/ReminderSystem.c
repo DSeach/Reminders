@@ -45,7 +45,7 @@ int main(int argc , char* argv[]){
 		exit(-1);
 	}
 
-	FillRecords(records , fp);
+	//FillRecords(records , fp);
 
 	fclose(fp);
 	return 0;
