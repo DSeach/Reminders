@@ -35,6 +35,8 @@ int main(int argc , char* argv[]){
 	christmas.tm_mon = 11;
 	christmas.tm_year = (currentTime->tm_year);
 	time_t chrissyTime = mktime(&christmas);
+
+
 	if(myTime > chrissyTime){printf("Christmas has already happend!\n");}
 	else{printf("Christmas is %d days away!\n" , (chrissyTime - myTime) / 60 / 60 / 24);}
 
@@ -51,44 +53,20 @@ int main(int argc , char* argv[]){
 	return 0;
 }
 
+
+
 void FillRecords(struct timeRecord** records , FILE* fd){
-	char* line = NULL;
-	char* tok = NULL;
-	char delim[2] = ",";
-	ssize_t nread;
-	size_t len = 0;
-	int recordNum = 0;
-	int num;
+	//timeRecord internal:
+	//int day, month
+	//char tr_rep
+	//char* name
+	//
+	//file format
+	//day,month,tr_rep,name
+	
 
-	while((nread = getline(&line , &len , fd)) != -1){
-		//printf("Reading ... %s \n" , line);
-		tok = strtok(line,delim);
-		//day,month,name,rep
-		for(int i = 0; i < 4 , tok != NULL; ++i) {
+	//TODO learn how to malloc
 
-			switch(i) {
-			case 0:
-			  num = atoi(tok);
-			  records[recordNum]->tr_tm->tm_mday = num; //day
-			  break;
-			case 1:
-			  num = atoi(tok);
-			  records[recordNum]->tr_tm->tm_mon = num; //month
-			  break;
-			case 2:
-			  records[recordNum]->tr_name = tok; //name of date
-			  break;
-			case 3:
-			  records[recordNum]->tr_rep = tok; //if repeating
-			  break;
-			}
-			tok = strtok(NULL , delim);
-
-		}
-		recordNum++;
-
-	}
-	free(line);
 }
 
 

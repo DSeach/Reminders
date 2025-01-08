@@ -4,9 +4,9 @@
 #include <time.h>
 
 struct timeRecord {
-	struct tm* tr_tm;
+	int day,month;
 	char* tr_name;
-	char* tr_rep;
+	char tr_rep;
 };
 
 void FillRecords(struct timeRecord** records , FILE* fd);
