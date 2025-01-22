@@ -9,6 +9,19 @@ struct timeRecord {
 	char tr_rep;
 };
 
-void FillRecords(struct timeRecord** records , FILE* fd);
+//function to malloc count amount of timeRecords and return the pointer
+//WARNING the timeRecords are uninitialised.
+struct timeRecord* allocTime(int count);
+
+//self explanitory
+void printDates(struct timeRecord* records, int count);
+
+//initialises the data in each time record from the file, fd. data must be organised such as:
+//day,month,tr_rep,tr_name
+void FillRecords(struct timeRecord* records , FILE* fd, int count);
+
+//counts the amount of lines in the file to detirmine how many timeRecords to have.
+//uses rewind() to put the pointer back at the begining.
+int GetLinesFile(FILE* fp);
 
 #endif

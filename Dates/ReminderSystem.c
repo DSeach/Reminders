@@ -25,37 +25,57 @@
 	**/
 
 int main(int argc , char* argv[]){
-	time_t myTime = time(NULL);
-	struct timeRecord* records[10] = {0};
+
+	int count = 0;
 	const char* fileName = "dates";
-	struct tm* currentTime = localtime(&myTime);
-	
-	struct tm christmas = {0};
-	christmas.tm_mday = 25;
-	christmas.tm_mon = 11;
-	christmas.tm_year = (currentTime->tm_year);
-	time_t chrissyTime = mktime(&christmas);
-
-
-	if(myTime > chrissyTime){printf("Christmas has already happend!\n");}
-	else{printf("Christmas is %d days away!\n" , (chrissyTime - myTime) / 60 / 60 / 24);}
-
+	struct timeRecord* dates;
 	FILE* fp = fopen(fileName , "r+" );
+	
 
 	if(fp == NULL){
 		perror("Error opening file\n");
 		exit(-1);
 	}
+	
+	//count the amount of line in file and then allocate that many timeRecords
 
-	//FillRecords(records , fp);
+	count = GetLinesFile(fp);
+	dates = allocTime(count);
+	FillRecords(dates , fp , count);
+	printDates(dates , count);
 
+	free(dates);
 	fclose(fp);
 	return 0;
 }
 
+int GetLinesFile(FILE* fp){
+	int count = 0;
+	char endline;
+	
+	//feels slow
+	for(endline = getc(fp); endline != EOF; endline = getc(fp)){
+		if(endline == '\n'){
+			count++;
+		}
+	}
+	rewind(fp);
+	return count;
+}
 
+//WARNING unitialised!
+struct timeRecord* allocTime(int count){
+	struct timeRecord* arr= malloc(sizeof(struct timeRecord) * count );
+	return arr;
+}
 
-void FillRecords(struct timeRecord** records , FILE* fd){
+void printDates(struct timeRecord* records , int count){
+	for(int i = 0; i < count; ++i){
+		printf("%s is on the %d/%d -rep = %c-\n" , records[i].tr_name , records[i].day , records[i].month , records[i].tr_rep);
+	}
+}
+
+void FillRecords(struct timeRecord* records , FILE* fd , int count){
 	//timeRecord internal:
 	//int day, month
 	//char tr_rep
@@ -63,10 +83,43 @@ void FillRecords(struct timeRecord** records , FILE* fd){
 	//
 	//file format
 	//day,month,tr_rep,name
-	
+	char* line =NULL;
+	size_t len = 0;
 
-	//TODO learn how to malloc
+	for(int i = 0; i < count; i++)
+	{
+		if(getline(&line , &len , fd) != -1){
+			char* token = strtok(line , ",");
+			int num = 0;
+
+			while(token != NULL){
+				switch(num){
+				  case 0:
+					records[i].day = atoi(token);
+					break;
+				  case 1:
+					records[i].month = atoi(token);
+					break;
+				  case 2:
+					records[i].tr_rep = token[0];
+					break;
+				  case 3:
+					records[i].tr_name = strdup(token);
+					break;
+				}
+				token = strtok(NULL, ",");
+				num++;
+			}
+	
+		} else {
+			perror("getline failure\n");
+			exit(-1);
+		}
+	}
+
+	free(line);
 
 }
+
 
 
