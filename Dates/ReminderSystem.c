@@ -8,52 +8,15 @@
 	* @author David Seach
 	* @date 31/12/2024
 	* @brief
-	* A program to read a file and calculate how many days it is until 
-	* that date. 
-	*
-	* The Stuct I am using (stored in ReminderSystem.h) is called timeRecord
-	* and it used a struct tm that is found in time.h, I want to fill out
-	* the timeRecord->tm_mday and timeRecord->mon to calculate the total 
-	* seconds using localtime() also found in time.h to see if the date has
-	* passed and if it hasnt, how many days until it does. If the date has 
-	* passed then the char in timeRecord (tr_rep) will either add a year 
-	* for next year's date or remove the entry in the file.
-	*
+	* A collection of functions to allow the storing of date information into a timeRecord struct ( stored in the header )
 	* file name for data: dates
-	*
-	* TODO malloc timeRecord and in inner tm's
+	* format: day,month,tr_rep,tr_name
 	**/
-
-int main(int argc , char* argv[]){
-
-	int count = 0;
-	const char* fileName = "dates";
-	struct timeRecord* dates;
-	FILE* fp = fopen(fileName , "r+" );
-	
-
-	if(fp == NULL){
-		perror("Error opening file\n");
-		exit(-1);
-	}
-	
-	//count the amount of line in file and then allocate that many timeRecords
-
-	count = GetLinesFile(fp);
-	dates = allocTime(count);
-	FillRecords(dates , fp , count);
-	printDates(dates , count);
-
-	free(dates);
-	fclose(fp);
-	return 0;
-}
 
 int GetLinesFile(FILE* fp){
 	int count = 0;
 	char endline;
 	
-	//feels slow
 	for(endline = getc(fp); endline != EOF; endline = getc(fp)){
 		if(endline == '\n'){
 			count++;
@@ -75,14 +38,11 @@ void printDates(struct timeRecord* records , int count){
 	}
 }
 
-void FillRecords(struct timeRecord* records , FILE* fd , int count){
-	//timeRecord internal:
-	//int day, month
-	//char tr_rep
-	//char* name
-	//
-	//file format
-	//day,month,tr_rep,name
+
+//@return the length of the array
+int FillRecords(struct timeRecord* records , FILE* fd){
+	int count = GetLinesFile(fd);
+	records = allocTime(count);
 	char* line =NULL;
 	size_t len = 0;
 
@@ -110,15 +70,13 @@ void FillRecords(struct timeRecord* records , FILE* fd , int count){
 				token = strtok(NULL, ",");
 				num++;
 			}
-	
 		} else {
 			perror("getline failure\n");
 			exit(-1);
 		}
 	}
-
 	free(line);
-
+	return count;
 }
 
 

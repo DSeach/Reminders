@@ -18,7 +18,8 @@ void printDates(struct timeRecord* records, int count);
 
 //initialises the data in each time record from the file, fd. data must be organised such as:
 //day,month,tr_rep,tr_name
-void FillRecords(struct timeRecord* records , FILE* fd, int count);
+
+int FillRecords(struct timeRecord* records , FILE* fd);
 
 //counts the amount of lines in the file to detirmine how many timeRecords to have.
 //uses rewind() to put the pointer back at the begining.
