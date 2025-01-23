@@ -34,15 +34,32 @@ struct timeRecord* allocTime(int count){
 
 void printDates(struct timeRecord* records , int count){
 	for(int i = 0; i < count; ++i){
-		printf("%s is on the %d/%d -rep = %c-\n" , records[i].tr_name , records[i].day , records[i].month , records[i].tr_rep);
+		printf("%s is on the %02d/%02d rep = %c\n" , records[i].tr_name , records[i].day , records[i].month , records[i].tr_rep);
 	}
+}
+
+time_t timeUntil(struct timeRecord date , time_t now){
+	struct tm currtime = *localtime(&now);
+
+	struct tm target = {0}; 
+	target.tm_mday = date.day;
+	target.tm_mon = date.month -1;
+	target.tm_year = currtime.tm_year;
+	if (date.tr_rep == 'y') {
+		if (target.tm_mon < currtime.tm_mon || 
+		(target.tm_mon == currtime.tm_mon && target.tm_mday < currtime.tm_mday)) {
+			target.tm_year += 1; // Move to the next year
+			}
+	}
+	time_t targetTime = mktime(&target);
+	return difftime(targetTime , now);
 }
 
 
 //@return the length of the array
-int FillRecords(struct timeRecord* records , FILE* fd){
+int FillRecords(struct timeRecord** records , FILE* fd){
 	int count = GetLinesFile(fd);
-	records = allocTime(count);
+	*records = allocTime(count);
 	char* line =NULL;
 	size_t len = 0;
 
@@ -55,16 +72,20 @@ int FillRecords(struct timeRecord* records , FILE* fd){
 			while(token != NULL){
 				switch(num){
 				  case 0:
-					records[i].day = atoi(token);
+					(*records)[i].day = atoi(token);
 					break;
 				  case 1:
-					records[i].month = atoi(token);
+					(*records)[i].month = atoi(token);
 					break;
 				  case 2:
-					records[i].tr_rep = token[0];
+					(*records)[i].tr_rep = token[0];
 					break;
 				  case 3:
-					records[i].tr_name = strdup(token);
+					char* name = strdup(token);
+					int slen = 0;
+					while(name[slen] != '\n'){slen++;}
+					name[slen] = '\0';
+					(*records)[i].tr_name = strdup(name);
 					break;
 				}
 				token = strtok(NULL, ",");
