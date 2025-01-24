@@ -17,24 +17,19 @@ int main(int argc , char* argv[]){
 		exit(-1);
 	}
 	int count = FillRecords(&dates , fd); 
-	
 	time_t t = time(NULL);
-	time_t toGo;
-	struct tm currdate;
+	int daysToGo = 0;
+	
 	
 	for(int i = 0 ; i < count; ++i){
-		toGo = timeUntil(dates[i] , t);
-		if(toGo >= 0){
-			toGo = toGo / (60 * 60 * 24);
-			printf("%ld days to go until %s\n" , toGo , dates[i].tr_name);
-		} else {
-			printf("%s has already happened, %ld days ago\n" , dates[i].tr_name , toGo);
-		}
+		daysToGo = DaysUntil(dates[i] , t);
+		if(daysToGo > 0){printf("%d days to go until %s\n" , daysToGo , dates[i].tr_name);} 
+		if(daysToGo == 0){ printf("%s is today!\n" , dates[i].tr_name);}
+		if(daysToGo < 0){printf("%s happened %d days ago\n" , dates[i].tr_name , daysToGo);}
 	}
 
-	fclose(fd);
 	free(dates);
-	
+	fclose(fd);
 	return 0;
 }
 

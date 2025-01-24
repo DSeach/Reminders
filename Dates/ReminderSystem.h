@@ -23,6 +23,6 @@ int FillRecords(struct timeRecord** records , FILE* fd);
 //uses rewind() to put the pointer back at the begining.
 int GetLinesFile(FILE* fp);
 
-time_t timeUntil(struct timeRecord date, time_t now);
+int DaysUntil(struct timeRecord date, time_t now);
 
 #endif

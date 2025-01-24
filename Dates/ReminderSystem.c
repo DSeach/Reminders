@@ -38,21 +38,35 @@ void printDates(struct timeRecord* records , int count){
 	}
 }
 
-time_t timeUntil(struct timeRecord date , time_t now){
+int DaysUntil(struct timeRecord date , time_t now){
 	struct tm currtime = *localtime(&now);
-
 	struct tm target = {0}; 
+
 	target.tm_mday = date.day;
 	target.tm_mon = date.month -1;
 	target.tm_year = currtime.tm_year;
-	if (date.tr_rep == 'y') {
-		if (target.tm_mon < currtime.tm_mon || 
-		(target.tm_mon == currtime.tm_mon && target.tm_mday < currtime.tm_mday)) {
-			target.tm_year += 1; // Move to the next year
-			}
-	}
+	
 	time_t targetTime = mktime(&target);
-	return difftime(targetTime , now);
+	if(targetTime < 1) { return -1;}
+
+	double secondsDiff = difftime(targetTime , now);
+	int daysDiff = (int)(secondsDiff / (60*60*24));
+
+	if(secondsDiff < 0 && date.tr_rep != 'y'){
+		return daysDiff; 
+	}
+
+	if(date.tr_rep == 'y' && daysDiff < 0){
+		target.tm_year += 1;
+		targetTime = mktime(&target);
+		secondsDiff = difftime(targetTime , now);
+		daysDiff = (int)(secondsDiff / (60*60*24));
+	}
+
+
+	
+
+	return daysDiff;
 }
 
 
