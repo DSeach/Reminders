@@ -25,7 +25,7 @@ int main(int argc , char* argv[]){
 		daysToGo = DaysUntil(dates[i] , t);
 		if(daysToGo > 0){printf("%d days to go until %s\n" , daysToGo , dates[i].tr_name);} 
 		if(daysToGo == 0){ printf("%s is today!\n" , dates[i].tr_name);}
-		if(daysToGo < 0){printf("%s happened %d days ago\n" , dates[i].tr_name , daysToGo);}
+		if(daysToGo < 0){printf("%s happened %d days ago\n" , dates[i].tr_name , abs(daysToGo));}
 	}
 
 	free(dates);
