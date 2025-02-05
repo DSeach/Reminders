@@ -25,4 +25,7 @@ int GetLinesFile(FILE* fp);
 
 int DaysUntil(struct timeRecord date, time_t now);
 
+void AddDate(FILE* fd, char* date);
+
+
 #endif

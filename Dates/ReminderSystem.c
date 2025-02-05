@@ -16,7 +16,7 @@
 int GetLinesFile(FILE* fp){
 	int count = 0;
 	char endline;
-	
+	rewind(fp);	
 	for(endline = getc(fp); endline != EOF; endline = getc(fp)){
 		if(endline == '\n'){
 			count++;
@@ -63,15 +63,13 @@ int DaysUntil(struct timeRecord date , time_t now){
 		daysDiff = (int)(secondsDiff / (60*60*24));
 	}
 
-
-	
-
 	return daysDiff;
 }
 
 
 //@return the length of the array
 int FillRecords(struct timeRecord** records , FILE* fd){
+	rewind(fd);
 	int count = GetLinesFile(fd);
 	*records = allocTime(count);
 	char* line =NULL;
@@ -112,6 +110,16 @@ int FillRecords(struct timeRecord** records , FILE* fd){
 	}
 	free(line);
 	return count;
+}
+
+void AddDate(FILE* fd, char* date){
+	//I want the date to be passed in as a line such as :
+	//"day,month,rep,name" then use strtok
+	//TODO at this stage, I want another function to handle if the date is correct or not.
+	fseek(fd , 0 ,SEEK_END);
+	fprintf(fd ,"%s\n" , date);
+	printf("Date - %s - Successfully added\n" , date);
+	fclose(fd);
 }
 
 
