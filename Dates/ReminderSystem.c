@@ -93,11 +93,10 @@ int FillRecords(struct timeRecord** records , FILE* fd){
 					(*records)[i].tr_rep = token[0];
 					break;
 				  case 3:
-					char* name = strdup(token);
 					int slen = 0;
-					while(name[slen] != '\n'){slen++;}
-					name[slen] = '\0';
-					(*records)[i].tr_name = strdup(name);
+					while(token[slen] != '\0'){slen++;}
+					token[slen -1] = '\0';
+					(*records)[i].tr_name = strdup(token);
 					break;
 				}
 				token = strtok(NULL, ",");
@@ -116,11 +115,57 @@ void AddDate(FILE* fd, char* date){
 	//I want the date to be passed in as a line such as :
 	//"day,month,rep,name" then use strtok
 	//TODO at this stage, I want another function to handle if the date is correct or not.
+	if(ValidateTR(date) != 0){
+		exit(-1);
+	}
+
 	fseek(fd , 0 ,SEEK_END);
 	fprintf(fd ,"%s\n" , date);
 	printf("Date - %s - Successfully added\n" , date);
-	fclose(fd);
 }
-
-
-
+//return 0 if valid, -1 if not
+int ValidateTR(char* date){
+	char* line = strdup(date);
+	int day,month;
+	char* tok = strtok(line, ",");
+	int num = 0;
+	while(tok != NULL){
+		switch(num){
+		  case 0:
+			day = atoi(tok);
+			if(day > 31 || day < 1){
+					printf("invalid day %s\n" , tok);
+					free(line);
+					return -1;
+				}
+			break;
+		  case 1:
+			month = atoi(tok);
+			if(month > 12 || month < 1){
+					printf("Invalid month %s\n" , tok);
+					free(line);
+					return -1;
+				}
+			break;
+		  case 2:
+			int len = 0;
+			while (tok[len] != '\0'){len++;}
+			if(len != 1) {
+				printf("Invalid rep char %s\n" , tok);
+				free(line);
+				return -1;
+			}
+			break;
+		  case 3:
+			break;
+		  defailt:
+			printf("Invalid additional text %s\n" , tok);
+			free(line);
+			return -1;
+		}
+		num++;
+		tok = strtok(NULL , ",");
+	}
+	free(line);
+	return 0;
+}

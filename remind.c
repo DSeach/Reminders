@@ -10,7 +10,7 @@ void normalFunc(struct timeRecord** dates, FILE* fd);
 int main(int argc , char* argv[]){
 
 	const char* filename = "dates";
-	struct timeRecord* dates = malloc(sizeof(struct timeRecord));
+	struct timeRecord* dates = NULL;
 	FILE* fd = fopen(filename , "a+");
 
 	if(fd == NULL){
@@ -39,7 +39,6 @@ int main(int argc , char* argv[]){
 		}
 	}
 
-	free(dates);
 	fclose(fd);
 	return 0;
 }
@@ -55,6 +54,7 @@ void normalFunc(struct timeRecord** dates, FILE* fd){
 		if(daysToGo > 0){printf("%d days to go until \033[31m%s\n\033[0m" , daysToGo , (*dates)[i].tr_name);} 
 		if(daysToGo == 0){ printf("%s is today!\n" , (*dates)[i].tr_name);}
 		if(daysToGo < 0){printf("%s happened %d days ago\n" , (*dates)[i].tr_name , abs(daysToGo));}
+		free((*dates)[i].tr_name);
 	}
-	
+	free(*dates);
 }

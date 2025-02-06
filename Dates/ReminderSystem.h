@@ -27,5 +27,9 @@ int DaysUntil(struct timeRecord date, time_t now);
 
 void AddDate(FILE* fd, char* date);
 
+//function to validate the information of a string into a timeRecord
+//@param line: the string that will be seperated, expected format being dd,mm,rep,name
+//@return int : 0 if the string is valid, -1 if not.
+int ValidateTR(char* date);
 
 #endif
